@@ -10,14 +10,34 @@ Rule: **Performance for thinking** (spec analysis, app design, core features, de
 
 ---
 
+## Credit budget (3000) — check the balance at each checkpoint
+
+| Stage | Budget | Running total |
+|---|---|---|
+| P1 + P2 planning (Performance) | 250 | 250 |
+| P3 scaffold (Efficient) | 100 | 350 |
+| P4 base (Performance) | 700 | 1050 |
+| P5 batches + P6 design pass | 1200 | 2250 |
+| Debugging reserve | 450 | 2700 |
+| P7 audit + safety buffer | 300 | 3000 |
+
+**Checkpoints:**
+- **After P2:** note how much planning actually cost. If over 400, every later stage will cost more than budgeted — use Efficient for all batches.
+- **After P4 (base):** used more than 1300? Efficient only from now on, Performance just for bugs Efficient fails on twice.
+- **Below 800 left:** stop starting new batches. Design pass (Efficient) + audit only.
+- **Below 300 left:** go straight to P7. Never get to 0 before the final push — Qoder drops to Lite only.
+
+**What burns credits fastest (avoid):** long chats (start fresh ones), Auto, letting Qoder loop on the same error (stop it after 2 failed attempts and use **Going in circles**), vague prompts ("make it better"), asking for explanations, sending one bug per message instead of a list.
+
+---
+
 ## Timeline
 
 | Time | What | Model |
 |---|---|---|
 | 07:45 | Log in, Qoder signed in, files from Moodle | — |
 | 08:00 | 2 min doing nothing. Read the spec yourself. | — |
-| 08:05 | **P1 Analyse spec** → REQUIREMENTS.md (ask tutor first if allowed in planning) | Performance |
-| 08:15 | **P2 Design the app** → PLAN.md | Performance |
+| 08:05 | Ask a tutor if Qoder may be used for planning. **Yes →** P1 then P2. **No →** Manual planning on paper | Performance |
 | 08:30 | Git setup (5 min), **P3 Scaffold** | Efficient |
 | 09:00 | **P4 Base features** | Performance |
 | ~10:30 | Base pushed ✅ — click through whole app | — |
@@ -58,6 +78,47 @@ git add -A && git commit -m "docs: init" && git push
 Username = GitHub username, password = **token**. Open the folder in Qoder. Delete `~/.git-credentials` before you go home.
 
 (If tutors let you do P1/P2 during planning time, do git at 07:45 or right at 08:30 — P1/P2 only write .md files, no code.)
+
+---
+
+## Manual planning (08:00–08:30, if Qoder isn't allowed yet)
+
+Paper or a plain text file. Same structure as P1/P2, so it plugs straight into Qoder at 08:30.
+
+**08:00–08:02 — Do nothing.**
+
+**08:02–08:12 — Read and mark the spec (10 min).**
+Read it twice. On the second read, mark every sentence that is a requirement:
+- **M** = mandatory, **O** = optional, and write the marks next to it.
+- Circle every exact name: routes, field names, file names, ports, page titles, button labels.
+- Put a **?** next to anything unclear and write your safest interpretation.
+
+**08:12–08:20 — Sketch the app (8 min).**
+1. **Main flow:** what does a user do from opening the app to finishing the main task? 4–8 steps.
+2. **Tables:** one line per "thing" in the spec (users, orders, bookings...). List its fields. Draw arrows for relations (a booking belongs to a user). Add fields optional features will need now, so the schema never has to change.
+3. **Pages:** list them = your sidebar items. For each: what it shows, what you can do there.
+4. **API:** for each table, which of list / get / create / update / delete do the pages need? e.g. `GET /api/bookings`, `POST /api/bookings`.
+
+**08:20–08:27 — Rank the optional features (7 min).**
+Table on paper: feature | marks | effort L/M/H | touches which table/page.
+- Group features that touch the same table or page = one batch.
+- Order: highest marks for lowest effort first. Cross out anything H effort + low marks.
+- Note stack conflicts: does the spec force Postgres, Docker, TypeScript, a framework? Check it against the allowed domains list.
+
+**08:27–08:30 — Set up.** Repo URL ready, Qoder open, credits noted. Breathe.
+
+At 08:30 type your notes into `notes.md` in the repo (5 min, rough is fine), then use **P1+P2 from notes** instead of P1 and P2.
+
+## P1+P2 from notes · Performance (replaces P1 and P2 if you planned manually)
+
+```
+Follow AGENTS.md. I planned by hand in notes.md. Read spec.md and notes.md. Write no code.
+1. Create REQUIREMENTS.md from the spec (format in AGENTS.md), with the batch from my notes in each row. Add anything I missed and tell me what you added.
+2. Create PLAN.md from my notes: user flows, data model (full columns/types/relations), API table, pages, seed data, ranked batches, top 3 risks. Fix anything in my notes that is wrong or would cause problems later, and tell me what you changed, one line each.
+Keep it tight. Stop.
+```
+
+Then carry on with P3.
 
 ---
 
